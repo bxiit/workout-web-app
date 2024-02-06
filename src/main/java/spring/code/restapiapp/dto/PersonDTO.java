@@ -1,4 +1,4 @@
-package spring.code.restapiapp.dao;
+package spring.code.restapiapp.dto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;

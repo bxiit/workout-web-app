@@ -1,88 +1,80 @@
 package spring.code.restapiapp.controllers;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import spring.code.restapiapp.dto.CustomerDTO;
 import spring.code.restapiapp.models.BodyData;
-import spring.code.restapiapp.models.Customer;
 import spring.code.restapiapp.services.CustomerService;
 import spring.code.restapiapp.util.*;
 
 import java.util.List;
 
-@RequestMapping("/customers")
+@RequestMapping("customers")
 @RestController
+@AllArgsConstructor
 public class CustomerController {
-
     private final CustomerService customerService;
 
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
+    @GetMapping("/welcome")
+    public ResponseEntity<String> welcomePage() {
+        return ResponseEntity.ok("welcome page for unauthorized customers");
     }
 
-    @GetMapping()
-    public List<Customer> getCustomers() {
+    @PostMapping("/register/admin")
+    public ResponseEntity<String> addUser(@RequestBody @Valid CustomerDTO customerDTO,
+                                          BindingResult bindingResult,
+                                          @RequestParam("roles") String roles) {
+        validatingCustomer(bindingResult);
+
+        customerService.addAdmin(customerService.convertToCustomer(customerDTO), roles);
+        return ResponseEntity.ok("Customer saved successfully!");
+    }
+
+    @PostMapping("/register/customer")
+    public ResponseEntity<String> addUser(@RequestBody @Valid CustomerDTO customerDTO,
+                                          BindingResult bindingResult) {
+        validatingCustomer(bindingResult);
+
+        customerService.addAdmin(customerService.convertToCustomer(customerDTO));
+        return ResponseEntity.ok("Customer saved successfully!");
+    }
+
+    @GetMapping("/all-customers")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public List<CustomerDTO> getCustomers() {
         return customerService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Customer getCustomer(@PathVariable("id") int id) {
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public CustomerDTO getCustomer(@PathVariable("id") int id) {
         return customerService.findOne(id);
     }
 
 
     @PostMapping("/{id}/edit")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<HttpStatus> updateCustomer(@PathVariable("id") int id,
-                               @RequestBody @Valid Customer customer,
-                               BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            StringBuilder errorMsg = new StringBuilder();
+                                                     @RequestBody @Valid CustomerDTO customerDTO,
+                                                     BindingResult bindingResult) {
+        validatingCustomer(bindingResult);
 
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error: errors){
-                errorMsg.append(error.getField())
-                        .append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-
-            throw new CustomerNotCreatedException(errorMsg.toString());
-        }
-
-        customerService.save(id, customer);
+        customerService.save(id, customerService.convertToCustomer(customerDTO));
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PostMapping()
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid Customer customer,
-                                             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            StringBuilder errorMsg = new StringBuilder();
-
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error: errors){
-                errorMsg.append(error.getField())
-                        .append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-
-            throw new CustomerNotCreatedException(errorMsg.toString());
-        }
-
-        customerService.save(customer);
-
-        // HTTP response with empty body and status OK (200)
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
 
     @PostMapping("/{id}/body")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<HttpStatus> createBodyData(@PathVariable("id") int id,
                                                      @RequestBody @Valid BodyData bodyData,
                                                      BindingResult bindingResult) {
@@ -90,7 +82,7 @@ public class CustomerController {
             StringBuilder errorMsg = new StringBuilder();
 
             List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error: errors){
+            for (FieldError error : errors) {
                 errorMsg.append(error.getField())
                         .append(" - ")
                         .append(error.getDefaultMessage())
@@ -126,6 +118,22 @@ public class CustomerController {
         BodyDataErrorResponse response = new BodyDataErrorResponse(
                 exception.getMessage(), System.currentTimeMillis()
         );
-        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    private void validatingCustomer(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMsg = new StringBuilder();
+
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMsg.append(error.getField())
+                        .append(" - ")
+                        .append(error.getDefaultMessage())
+                        .append(";");
+            }
+
+            throw new CustomerNotCreatedException(errorMsg.toString());
+        }
     }
 }

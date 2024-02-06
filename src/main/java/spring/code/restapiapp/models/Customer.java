@@ -9,25 +9,28 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "customer")
 public class Customer {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name")
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
-    private String name;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "age")
-    @Min(value = 0, message = "Age can not be negative")
     private int age;
 
     @JsonManagedReference
@@ -38,12 +41,22 @@ public class Customer {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "created")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime created;
+
+    @Column(name = "roles")
+    private String roles;
+
 
     public Customer() {
     }
 
-    public Customer(String name, int age, String email, BodyData bodyData) {
-        this.name = name;
+    public Customer(String username, int age, String email, BodyData bodyData) {
+        this.username = username;
         this.age = age;
         this.email = email;
         this.bodyData = bodyData;

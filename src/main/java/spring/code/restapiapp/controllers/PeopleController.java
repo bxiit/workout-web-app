@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import spring.code.restapiapp.dao.PersonDTO;
+import spring.code.restapiapp.dto.PersonDTO;
 import spring.code.restapiapp.models.Person;
 import spring.code.restapiapp.services.PeopleService;
 import spring.code.restapiapp.util.PersonErrorResponse;
