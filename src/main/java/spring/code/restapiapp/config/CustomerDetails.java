@@ -16,10 +16,6 @@ public class CustomerDetails implements UserDetails {
 
     private final Customer customer;
 
-//    public CustomerDetails(Customer customer) {
-//        this.customer = customer;
-//    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(customer.getRoles().split(", "))
@@ -55,5 +51,12 @@ public class CustomerDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerDetails{" +
+                "customer=" + customer +
+                '}';
     }
 }

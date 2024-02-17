@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class RestApiAppApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(RestApiAppApplication.class, args);
     }
@@ -16,5 +15,4 @@ public class RestApiAppApplication {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
 }

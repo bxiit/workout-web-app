@@ -1,46 +1,31 @@
 package spring.code.restapiapp.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.Getter;
 import lombok.Setter;
+import spring.code.restapiapp.models.Customer;
 
-@Entity
-@Table(name = "body_data")
-@Setter
+import java.time.LocalDateTime;
+
 @Getter
+@Setter
+@Document
 public class BodyData {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @JsonBackReference
-    @OneToOne
-    @JoinColumn(name = "customer_id", unique = true)
+    @DBRef
     private Customer customer;
 
-    @Column(name = "weight")
     @Min(value = 0, message = "Weight can not be negative")
-    private double weight;
+    private Double weight;
 
-    @Column(name = "height")
     @Min(value = 0, message = "Height can not be negative")
-    private double height;
+    private Double height;
 
-    @Column(name = "percentoffat")
     @Min(value = 0, message = "Percent of fat can not be negative")
-    private double percentOfFat;
+    private Double percentOfFat;
 
-    public BodyData() {
-    }
-
-    public BodyData(Customer customer, double weight, double height, double percentOfFat) {
-        this.customer = customer;
-        this.weight = weight;
-        this.height = height;
-        this.percentOfFat = percentOfFat;
-    }
+    private LocalDateTime updated;
 }

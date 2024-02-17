@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration page</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Регистрация</h2>
+            <form method="post" action="api/register/customer" id="regging">
+                <div class="form-group">
+                    <label for="username">Имя пользователя</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="button" class="btn btn-primary" id="registerButton">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Подключение Bootstrap JS (необходим для некоторых функций) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById("registerButton").addEventListener("click", function(event) {
+        event.preventDefault(); // Предотвращаем стандартное поведение кнопки
+
+        console.log("JS FILE")
+        // Вызываем функцию registerUser(), чтобы отправить данные на сервер
+        registerUser();
+    });
+
+    function registerUser() {
+        const formData = {
+            username: $('#username').val(),
+            password: $('#password').val()
+        };
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/api/register/customer",
+            data: JSON.stringify(formData),
+            dataType: 'json',
+            success: function (data) {
+                console.log('Registration successful:', data);
+                // Handle success response here
+            },
+            error: function (error) {
+                console.error('Registration failed:', error);
+                // Handle error response here
+            }
+        });
+    }
+</script>
+</body>
+</html>

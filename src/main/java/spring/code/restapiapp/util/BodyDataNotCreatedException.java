@@ -1,6 +1,9 @@
 package spring.code.restapiapp.util;
 
-public class BodyDataNotCreatedException extends RuntimeException{
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+public class BodyDataNotCreatedException extends RuntimeException {
     public BodyDataNotCreatedException(String message) {
         super(message);
     }

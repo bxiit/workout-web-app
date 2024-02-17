@@ -28,8 +28,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("customers/welcome", "customers/register/**").permitAll()
-                        .requestMatchers("customers/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("api/welcome", "api/register/**").permitAll()
+                        .requestMatchers("api/**").authenticated())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll).build();
     }
 

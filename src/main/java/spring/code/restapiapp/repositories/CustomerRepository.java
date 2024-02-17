@@ -1,16 +1,14 @@
 package spring.code.restapiapp.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+import spring.code.restapiapp.models.BodyData;
 import spring.code.restapiapp.models.Customer;
 
 import java.util.Optional;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+public interface CustomerRepository extends MongoRepository<Customer, Long> {
     Optional<Customer> findByUsername(String username);
-
-
-//    @Query("select a from Customer a where a.created_at < :created_at")
-//    List<Customer> findAllByCreated_at(@Param("created_at") Date createdAt);
+    Optional<Customer> findByEmail(String email);
 }
