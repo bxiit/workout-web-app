@@ -1,36 +1,31 @@
 package spring.code.restapiapp.config;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import spring.code.restapiapp.models.Customer;
+import spring.code.restapiapp.models.User;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 @AllArgsConstructor
-public class CustomerDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
-    private final Customer customer;
+    private User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(customer.getRoles().split(", "))
-                .map(SimpleGrantedAuthority::new)
-                .toList();
+        return Collections.singleton(user.getRoles());
     }
 
     @Override
     public String getPassword() {
-        return customer.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return customer.getUsername();
+        return user.getUsername();
     }
 
     @Override
@@ -56,7 +51,7 @@ public class CustomerDetails implements UserDetails {
     @Override
     public String toString() {
         return "CustomerDetails{" +
-                "customer=" + customer +
+                "customer=" + user +
                 '}';
     }
 }

@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    private ResponseEntity<CustomerErrorResponse> handleException(CustomerWithThisUsernameIsAlreadyExists exception) {
+    private ResponseEntity<CustomerErrorResponse> handleException(CustomerIsAlreadyExists exception) {
         CustomerErrorResponse response = new CustomerErrorResponse(
                 exception.getMessage(), System.currentTimeMillis()
         );

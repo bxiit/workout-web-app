@@ -28,18 +28,23 @@
     </style>
 </head>
 <body>
+<div th:insert="~{fragments/navbar-fragment :: navbar}"></div>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="user-profile text-center">
-                <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-picture">
-                <h2 th:text="${customer.getUsername()}">User Name</h2>
-                <p th:email="${customer.getEmail()}">Email: user@example.com</p>
-                <p th:text="${customer.getAge()} years old"></p>
-                <p th:text="${customer.getBodyData()}"></p>
+            <div class="user-profile text-center" th:object="${user}">
+                <img src="https://liquipedia.net/commons/images/7/77/Brawl_Mortis.png" alt="Profile Picture" class="profile-picture">
+                <h2 th:text="${user.getUsername()}">User Name</h2>
+                <p th:if="${user.getEmail() != null}" th:email="${user.getEmail()}">Email: user@example.com</p>
+                <p th:if="${user.getEmail() == null}">Email is unknown</p>
+                <p th:if="${user.getAge() != null}" th:text="${user.getAge()} + ' years old'"></p>
+                <p th:if="${user.getAge() == null}">Age is unknown</p>
+                <p th:if="${user.getBodyData() != null}" th:text="${user.getBodyData()}"></p>
+                <p th:if="${user.getBodyData() == null}">Body data is unknown</p>
             </div>
         </div>
     </div>
 </div>
+<div th:insert="~{fragments/footer-fragment :: footer}"></div>
 </body>
 </html>

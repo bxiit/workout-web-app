@@ -10,75 +10,80 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import spring.code.restapiapp.dto.BodyDataDTO;
-import spring.code.restapiapp.dto.CustomerDTO;
-import spring.code.restapiapp.services.CustomerService;
-import spring.code.restapiapp.util.*;
+import spring.code.restapiapp.dto.UserDTO;
+import spring.code.restapiapp.registrationModel.UserRegistrationInfo;
+import spring.code.restapiapp.services.UserService;
+import spring.code.restapiapp.util.BodyDataNotCreatedException;
+import spring.code.restapiapp.util.CustomerNotCreatedException;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RequestMapping("/api")
 @Slf4j
 @RestController
 @AllArgsConstructor
-public class CustomerController {
-    private final CustomerService customerService;
-
-    @GetMapping("/welcome")
-    public ResponseEntity<String> welcomePage() {
-        return ResponseEntity.ok("welcome page for unauthorized customers");
-    }
+@CrossOrigin(origins = "http://localhost:3000")
+public class UserController {
+    private final UserService userService;
 
     @GetMapping("/all-customers")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<CustomerDTO> getCustomers() {
-        return customerService.getAllCustomers();
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<UserDTO> getCustomers() {
+        return userService.getAllCustomers();
     }
 
-    @PostMapping("/register/customer")
-    public ResponseEntity<String> addUser(@RequestBody @Valid CustomerDTO customerDTO,
-                                          BindingResult bindingResult) {
-        validatingCustomer(bindingResult);
-        customerService.addCustomer(customerService.convertToCustomer(customerDTO));
+    @PostMapping("/users")
+    public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userDTO,
+                                             BindingResult bindingResult) {
+        userService.addUser(userService.convertToUser(userDTO));
 
-        return ResponseEntity.ok("Customer saved successfully!");
+        return ResponseEntity.ok("User created successfully");
     }
 
-    @GetMapping("/{username}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
-    public CustomerDTO getCustomer(@PathVariable("username") String username) {
-        return customerService.findCustomerByUsername(username);
+    @GetMapping("users/{username}")
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public UserDTO getCustomer(@PathVariable("username") String username) {
+        return userService.findCustomerByUsername(username);
     }
 
-
-    @PutMapping("/{username}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PatchMapping("users/{username}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<HttpStatus> updateCustomer(@PathVariable("username") String username,
-                                                     @RequestBody @Valid CustomerDTO customerDTO,
+                                                     @RequestBody @Valid UserDTO userDTO,
                                                      BindingResult bindingResult) {
         validatingCustomer(bindingResult);
-        customerService.updateCustomer(username, customerService.convertToCustomer(customerDTO));
+        userService.updateCustomer(username, userService.convertToUser(userDTO));
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
+    @DeleteMapping("users/{username}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ResponseEntity<String> deleteUser(@PathVariable("username") String username) {
+        userService.deleteCustomer(username);
 
-
-    @GetMapping("/{username}/body")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public BodyDataDTO getBodyData(@PathVariable("username") String username) {
-        return customerService.getBodyData(username);
+        return ResponseEntity.ok("User has been deleted successfully");
     }
 
-    @PostMapping("/{username}/body")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @GetMapping("users/{username}/body")
+    @PreAuthorize("hasAuthority('USER')")
+    public BodyDataDTO getBodyData(@PathVariable("username") String username) {
+        return userService.getBodyData(username);
+    }
+
+    @PostMapping("users/{username}/body")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<HttpStatus> newBodyData(@PathVariable("username") String username,
                                                   @RequestBody @Valid BodyDataDTO bodyDataDTO,
                                                   BindingResult bindingResult) {
         validatingBodyData(bindingResult);
 
-        customerService.addBodyData(username, customerService.convertToBodyData(bodyDataDTO));
+        userService.addBodyData(username, userService.convertToBodyData(bodyDataDTO));
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
 
     private void validatingCustomer(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -95,6 +100,7 @@ public class CustomerController {
             throw new CustomerNotCreatedException(errorMsg.toString());
         }
     }
+
     private void validatingBodyData(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMsg = new StringBuilder();

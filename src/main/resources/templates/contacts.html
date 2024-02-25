@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-    <div th:insert="~{../static/parts/navbar-part :: navbar}"></div>
+    <div th:insert="~{/fragments/navbar-fragment :: navbar}"></div>
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <h2 class="mb-4">Наши контакты</h2>
@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div th:insert="~{../static/parts/footer-part :: footer}"></div>
+<div th:insert="~{/fragments/footer-fragment :: footer}"></div>
 <!-- Подключение Bootstrap JS (необходим для некоторых функций) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

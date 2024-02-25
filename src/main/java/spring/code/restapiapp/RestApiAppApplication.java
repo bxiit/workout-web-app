@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 public class RestApiAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(RestApiAppApplication.class, args);
+        System.out.println("RestApiAppApplication.main");
     }
 
     @Bean

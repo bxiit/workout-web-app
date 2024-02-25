@@ -19,4 +19,6 @@ public class BodyDataDTO {
 
     @Min(value = 0, message = "Percent of fat can not be negative")
     private Double percentOfFat;
+
+    private String lifestyle;
 }
