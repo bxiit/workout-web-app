@@ -120,12 +120,15 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version> <!-- Обратите внимание, что это может потребовать обновления до поддерживаемой версии -->
-                <configuration>
-                    <source>17</source> <!-- Версия исходного кода -->
-                    <target>17</target> <!-- Версия целевой платформы -->
-                </configuration>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals><goal>copy-dependencies</goal></goals>
+                    </execution>
+                </executions>
             </plugin>
             <!-- Остальные плагины -->
             <plugin>
