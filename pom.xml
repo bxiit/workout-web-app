@@ -125,7 +125,6 @@
                 <configuration>
                     <source>17</source> <!-- Версия исходного кода -->
                     <target>17</target> <!-- Версия целевой платформы -->
-                    <release>17</release> <!-- Версия для использования флага -release -->
                 </configuration>
             </plugin>
             <!-- Остальные плагины -->
