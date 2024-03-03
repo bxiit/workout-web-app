@@ -30,7 +30,6 @@ public class UserController {
         return ResponseEntity.ok("Welcome");
     }
     @GetMapping("/all-customers")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserDTO> getCustomers() {
         return userService.getAllCustomers();
     }
