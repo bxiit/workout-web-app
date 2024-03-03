@@ -119,6 +119,17 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version> <!-- Обратите внимание, что это может потребовать обновления до поддерживаемой версии -->
+                <configuration>
+                    <source>17</source> <!-- Версия исходного кода -->
+                    <target>17</target> <!-- Версия целевой платформы -->
+                    <release>17</release> <!-- Версия для использования флага -release -->
+                </configuration>
+            </plugin>
+            <!-- Остальные плагины -->
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
@@ -132,5 +143,7 @@
             </plugin>
         </plugins>
     </build>
+
+
 
 </project>

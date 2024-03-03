@@ -25,9 +25,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/users").permitAll()
+                        .requestMatchers("api/users", "api/welcome").permitAll()
                         .requestMatchers("api/**").authenticated())
                 .formLogin(Customizer.withDefaults());
+//                .formLogin(login -> login
+//                        .loginPage("/login")
+//                        .permitAll()
+//                        .defaultSuccessUrl("/api/welcome"));
 
         return httpSecurity.build();
     }

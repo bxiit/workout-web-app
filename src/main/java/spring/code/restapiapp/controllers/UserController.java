@@ -11,13 +11,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import spring.code.restapiapp.dto.BodyDataDTO;
 import spring.code.restapiapp.dto.UserDTO;
-import spring.code.restapiapp.registrationModel.UserRegistrationInfo;
 import spring.code.restapiapp.services.UserService;
 import spring.code.restapiapp.util.BodyDataNotCreatedException;
 import spring.code.restapiapp.util.CustomerNotCreatedException;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RequestMapping("/api")
@@ -28,6 +25,10 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("/welcome")
+    public ResponseEntity<String> welcomePage() {
+        return ResponseEntity.ok("Welcome");
+    }
     @GetMapping("/all-customers")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserDTO> getCustomers() {
