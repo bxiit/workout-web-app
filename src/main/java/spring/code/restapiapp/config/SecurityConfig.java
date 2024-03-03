@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/users", "api/welcome").permitAll()
+                        .requestMatchers("api/users", "api/welcome", "api/all-customers").permitAll()
                         .requestMatchers("api/**").authenticated())
                 .formLogin(Customizer.withDefaults());
 //                .formLogin(login -> login
